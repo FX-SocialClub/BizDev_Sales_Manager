@@ -87,12 +87,43 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:500;height:64px;padding:0 48p
   padding:8px 20px;border-radius:4px;font-size:12px!important;cursor:pointer;transition:all .2s!important;text-decoration:none;font-family:'Share Tech Mono',monospace;white-space:nowrap;}
 .nav-cta:hover{border-color:var(--accent)!important;color:var(--accent)!important;}
 
-/* ---- language switch ---- */
-.lang-switch{display:flex;border:1px solid var(--border2);border-radius:4px;overflow:hidden;flex-shrink:0;}
-.lang-btn{background:transparent;border:none;color:var(--lgrey);font-family:'Share Tech Mono',monospace;
-  font-size:11px;letter-spacing:0.08em;padding:7px 11px;cursor:pointer;transition:all .2s;line-height:1;}
-.lang-btn:hover{color:var(--white);}
-.lang-btn.active{background:var(--accent);color:var(--on-accent);text-shadow:none;}
+/* ---- language dropdown ---- */
+.lang-select{position:relative;flex-shrink:0;}
+.ls-btn{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;background:var(--card2);
+  border:1px solid var(--border2);border-radius:4px;cursor:pointer;transition:border-color .25s,background .25s;}
+.ls-btn:hover{border-color:var(--accent);background:var(--card);}
+.ls-cur{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.08em;line-height:1;
+  color:var(--white);transition:color .25s;min-width:22px;text-align:left;}
+.ls-btn:hover .ls-cur{color:var(--accent);}
+.ls-caret{width:13px;height:13px;color:var(--lgrey);transition:transform .3s cubic-bezier(.2,.9,.3,1.2),color .25s;}
+.ls-btn:hover .ls-caret{color:var(--white);}
+.lang-select.open .ls-caret{transform:rotate(180deg);color:var(--accent);}
+.ls-menu{position:absolute;top:calc(100% + 11px);right:0;min-width:120px;padding:6px;z-index:600;
+  background:var(--menu-bg);backdrop-filter:blur(22px);border:1px solid var(--border2);border-radius:6px;
+  box-shadow:var(--menu-shadow), 0 0 0 1px rgba(var(--accent-rgb),0.06);
+  opacity:0;visibility:hidden;transform:translateY(-10px) scale(.94);transform-origin:top right;
+  transition:opacity .2s ease,transform .3s cubic-bezier(.2,.9,.3,1.25),visibility 0s linear .3s;}
+.lang-select.open .ls-menu{opacity:1;visibility:visible;transform:none;transition-delay:0s;}
+.ls-menu::before{content:'';position:absolute;top:-5px;right:14px;width:8px;height:8px;background:var(--menu-bg);
+  border-left:1px solid var(--border2);border-top:1px solid var(--border2);transform:rotate(45deg);}
+.ls-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 10px;background:transparent;border:none;
+  border-radius:4px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.08em;
+  color:var(--lgrey);text-align:left;
+  opacity:0;transform:translateX(8px);
+  transition:opacity .26s ease,transform .26s cubic-bezier(.2,.9,.3,1.2),background .18s,color .18s;}
+.lang-select.open .ls-opt{opacity:1;transform:none;}
+.lang-select.open .ls-opt:nth-child(1){transition-delay:.05s,.05s,0s,0s;}
+.lang-select.open .ls-opt:nth-child(2){transition-delay:.11s,.11s,0s,0s;}
+.lang-select.open .ls-opt:nth-child(3){transition-delay:.17s,.17s,0s,0s;}
+.ls-opt:hover{background:var(--card);color:var(--white);}
+.ls-opt[aria-selected="true"]{color:var(--white);}
+.ls-code{flex:1;}
+.ls-check{width:14px;height:14px;color:var(--accent);opacity:0;transform:scale(.5);
+  transition:opacity .22s ease,transform .3s cubic-bezier(.2,.9,.3,1.5);}
+.ls-opt[aria-selected="true"] .ls-check{opacity:1;transform:none;}
+@media(prefers-reduced-motion:reduce){
+  .ls-menu,.ls-opt,.ls-caret,.ls-check{transition-duration:.01ms!important;}
+}
 
 /* ---- theme (colour) dropdown ---- */
 .theme-select{position:relative;flex-shrink:0;}
@@ -333,7 +364,8 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 }
 @media(max-width:420px){
   .ts-btn{padding:0 7px;gap:6px;}
-  .lang-btn{padding:7px 8px;font-size:10px;}
+  .ls-btn{padding:0 8px;gap:6px;}
+  .ls-cur{font-size:10px;}
   .nav-logo-mark{width:34px;height:34px;font-size:13px;}
   .nav-logo{gap:8px;}
 }
@@ -401,16 +433,23 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
   </a>
   <div class="nav-right">
     <div class="nav-links">
-      <a href="#about" data-ua="Профіль" data-en="Profile">Профіль</a>
-      <a href="#skills" data-ua="Компетенції" data-en="Expertise">Компетенції</a>
-      <a href="#process" data-ua="Процес" data-en="Process">Процес</a>
-      <a href="#automation" data-ua="Автоматизація" data-en="Automation">Автоматизація</a>
-      <a href="#projects" data-ua="Проєкти" data-en="Projects">Проєкти</a>
+      <a href="#about" data-ua="Профіль" data-ru="Профиль" data-en="Profile">Профіль</a>
+      <a href="#skills" data-ua="Компетенції" data-ru="Компетенции" data-en="Expertise">Компетенції</a>
+      <a href="#process" data-ua="Процес" data-ru="Процесс" data-en="Process">Процес</a>
+      <a href="#automation" data-ua="Автоматизація" data-ru="Автоматизация" data-en="Automation">Автоматизація</a>
+      <a href="#projects" data-ua="Проєкти" data-ru="Проекты" data-en="Projects">Проєкти</a>
     </div>
 
-    <div class="lang-switch" role="group" aria-label="Language">
-      <button type="button" class="lang-btn active" data-lang="ua">UA</button>
-      <button type="button" class="lang-btn" data-lang="en">ENG</button>
+    <div class="lang-select" id="langSelect">
+      <button type="button" class="ls-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">
+        <span class="ls-cur" id="langCur">UA</span>
+        <svg class="ico ls-caret" aria-hidden="true"><use href="#i-caret"/></svg>
+      </button>
+      <div class="ls-menu" id="langMenu" role="listbox" aria-label="Language">
+        <button type="button" class="ls-opt" role="option" data-lang="ua" aria-selected="true"><span class="ls-code">UA</span><svg class="ico ls-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+        <button type="button" class="ls-opt" role="option" data-lang="en" aria-selected="false"><span class="ls-code">ENG</span><svg class="ico ls-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+        <button type="button" class="ls-opt" role="option" data-lang="ru" aria-selected="false"><span class="ls-code">RU</span><svg class="ico ls-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </div>
     </div>
 
     <div class="theme-select" id="themeSelect">
@@ -419,43 +458,43 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
         <svg class="ico ts-caret" aria-hidden="true"><use href="#i-caret"/></svg>
       </button>
       <div class="ts-menu" id="themeMenu" role="listbox" aria-label="Colour theme">
-      <button type="button" class="ts-opt" role="option" data-theme-value="white" aria-selected="false"><span class="ts-sw sw-white"></span><span data-ua="Білий" data-en="White">Білий</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
-      <button type="button" class="ts-opt" role="option" data-theme-value="green" aria-selected="false"><span class="ts-sw sw-green"></span><span data-ua="Зелений" data-en="Green">Зелений</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
-      <button type="button" class="ts-opt" role="option" data-theme-value="red" aria-selected="false"><span class="ts-sw sw-red"></span><span data-ua="Червоний" data-en="Red">Червоний</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      <button type="button" class="ts-opt" role="option" data-theme-value="white" aria-selected="false"><span class="ts-sw sw-white"></span><span data-ua="Білий" data-ru="Белый" data-en="White">Білий</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      <button type="button" class="ts-opt" role="option" data-theme-value="green" aria-selected="false"><span class="ts-sw sw-green"></span><span data-ua="Зелений" data-ru="Зелёный" data-en="Green">Зелений</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      <button type="button" class="ts-opt" role="option" data-theme-value="red" aria-selected="false"><span class="ts-sw sw-red"></span><span data-ua="Червоний" data-ru="Красный" data-en="Red">Червоний</span><svg class="ico ts-check" aria-hidden="true"><use href="#i-check"/></svg></button>
       </div>
     </div>
 
-    <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="nav-cta" data-ua="Контакт" data-en="Contact">Контакт</a>
+    <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="nav-cta" data-ua="Контакт" data-ru="Контакт" data-en="Contact">Контакт</a>
   </div>
   <button class="nav-burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#about" data-ua="Профіль" data-en="Profile">Профіль</a>
-  <a href="#skills" data-ua="Компетенції" data-en="Expertise">Компетенції</a>
-  <a href="#process" data-ua="Цикл угоди" data-en="Deal cycle">Цикл угоди</a>
-  <a href="#automation" data-ua="Автоматизація та AI" data-en="Automation & AI">Автоматизація та AI</a>
-  <a href="#projects" data-ua="Проєкти" data-en="Projects">Проєкти</a>
-  <a href="#results" data-ua="Досягнення" data-en="Achievements">Досягнення</a>
-  <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="m-cta" data-ua="Написати в Telegram →" data-en="Message on Telegram →">Написати в Telegram →</a>
+  <a href="#about" data-ua="Профіль" data-ru="Профиль" data-en="Profile">Профіль</a>
+  <a href="#skills" data-ua="Компетенції" data-ru="Компетенции" data-en="Expertise">Компетенції</a>
+  <a href="#process" data-ua="Цикл угоди" data-ru="Цикл сделки" data-en="Deal cycle">Цикл угоди</a>
+  <a href="#automation" data-ua="Автоматизація та AI" data-ru="Автоматизация и AI" data-en="Automation & AI">Автоматизація та AI</a>
+  <a href="#projects" data-ua="Проєкти" data-ru="Проекты" data-en="Projects">Проєкти</a>
+  <a href="#results" data-ua="Досягнення" data-ru="Достижения" data-en="Achievements">Досягнення</a>
+  <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="m-cta" data-ua="Написати в Telegram →" data-ru="Написать в Telegram →" data-en="Message on Telegram →">Написати в Telegram →</a>
 </div>
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-label" data-ua="B2B Sales × Business Development × iGaming" data-en="B2B Sales × Business Development × iGaming">B2B Sales × Business Development × iGaming</div>
+  <div class="hero-label" data-ua="B2B Sales × Business Development × iGaming" data-ru="B2B Sales × Business Development × iGaming" data-en="B2B Sales × Business Development × iGaming">B2B Sales × Business Development × iGaming</div>
   <h1 class="hero-title"><span>Vadim <span class="accent-hl">M.</span></span></h1>
   <div class="hero-role">Sales Manager <span class="sep">|</span> Business Development Manager</div>
-  <div class="hero-loc" data-ua="<span style='color:var(--accent)'>→</span> Київ, UA · Remote · B2B преміум-сегмент" data-en="<span style='color:var(--accent)'>→</span> Kyiv, UA · Remote · B2B premium segment"><span style="color:var(--accent)">→</span> Київ, UA · Remote · B2B преміум-сегмент</div>
-  <p class="hero-sub" data-ua="3+ роки в B2B-продажах преміум-сегменту. Продавав трафік і рекламні розміщення напряму брендам iGaming-вертикалі: великі клієнти, довгий цикл угоди, високий чек — контракти від $10 000. Веду угоду повного циклу: від пошуку клієнта до супроводу і зростання обсягів." data-en="3+ years in premium-segment B2B sales. Sold traffic and ad placements directly to iGaming brands: large clients, long deal cycles, high average check — contracts from $10,000. I run the full cycle: from finding the client to account growth.">3+ роки в B2B-продажах преміум-сегменту. Продавав трафік і рекламні розміщення напряму брендам iGaming-вертикалі: великі клієнти, довгий цикл угоди, високий чек — контракти від $10 000. Веду угоду повного циклу: від пошуку клієнта до супроводу і зростання обсягів.</p>
+  <div class="hero-loc" data-ua="<span style='color:var(--accent)'>→</span> Київ, UA · Remote · B2B преміум-сегмент" data-ru="<span style='color:var(--accent)'>→</span> Киев, UA · Remote · B2B премиум-сегмент" data-en="<span style='color:var(--accent)'>→</span> Kyiv, UA · Remote · B2B premium segment"><span style="color:var(--accent)">→</span> Київ, UA · Remote · B2B преміум-сегмент</div>
+  <p class="hero-sub" data-ua="3+ роки в B2B-продажах преміум-сегменту. Продавав трафік і рекламні розміщення напряму брендам iGaming-вертикалі: великі клієнти, довгий цикл угоди, високий чек — контракти від $10 000. Веду угоду повного циклу: від пошуку клієнта до супроводу і зростання обсягів." data-ru="3+ года в B2B-продажах премиум-сегмента. Продавал трафик и рекламные размещения напрямую брендам iGaming-вертикали: крупные клиенты, длинный цикл сделки, высокий чек — контракты от $10 000. Веду сделку полного цикла: от поиска клиента до сопровождения и роста объёмов." data-en="3+ years in premium-segment B2B sales. Sold traffic and ad placements directly to iGaming brands: large clients, long deal cycles, high average check — contracts from $10,000. I run the full cycle: from finding the client to account growth.">3+ роки в B2B-продажах преміум-сегменту. Продавав трафік і рекламні розміщення напряму брендам iGaming-вертикалі: великі клієнти, довгий цикл угоди, високий чек — контракти від $10 000. Веду угоду повного циклу: від пошуку клієнта до супроводу і зростання обсягів.</p>
   <div class="hero-actions">
-    <a href="#skills" class="btn-primary" data-ua="Мої компетенції" data-en="My expertise">Мої компетенції</a>
-    <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="btn-secondary" data-ua="Написати в Telegram" data-en="Message on Telegram">Написати в Telegram</a>
+    <a href="#skills" class="btn-primary" data-ua="Мої компетенції" data-ru="Мои компетенции" data-en="My expertise">Мої компетенції</a>
+    <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="btn-secondary" data-ua="Написати в Telegram" data-ru="Написать в Telegram" data-en="Message on Telegram">Написати в Telegram</a>
   </div>
   <div class="hero-deco" aria-hidden="true"><canvas id="particleCanvas" width="710" height="710"></canvas></div>
   <div class="hero-stats">
-    <div class="stat-item"><div class="stat-num">$55K<span>+</span></div><div class="stat-label" data-ua="Контракти / міс" data-en="Contracts / mo">Контракти / міс</div></div>
-    <div class="stat-item"><div class="stat-num">$10K<span>+</span></div><div class="stat-label" data-ua="Мін. чек угоди" data-en="Min. deal size">Мін. чек угоди</div></div>
-    <div class="stat-item"><div class="stat-num">3<span>+</span></div><div class="stat-label" data-ua="Роки в B2B" data-en="Years in B2B">Роки в B2B</div></div>
+    <div class="stat-item"><div class="stat-num">$55K<span>+</span></div><div class="stat-label" data-ua="Контракти / міс" data-ru="Контракты / мес" data-en="Contracts / mo">Контракти / міс</div></div>
+    <div class="stat-item"><div class="stat-num">$10K<span>+</span></div><div class="stat-label" data-ua="Мін. чек угоди" data-ru="Мин. чек сделки" data-en="Min. deal size">Мін. чек угоди</div></div>
+    <div class="stat-item"><div class="stat-num">3<span>+</span></div><div class="stat-label" data-ua="Роки в B2B" data-ru="Годы в B2B" data-en="Years in B2B">Роки в B2B</div></div>
   </div>
 </section>
 
@@ -500,30 +539,30 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
   <div class="grid-bg" id="aboutGrid" aria-hidden="true"></div>
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Хто я" data-en="Who I am">Хто я</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-target"/></svg><span data-ua="Профіль" data-en="Profile">Профіль</span></h2>
+      <div class="section-label" data-ua="Хто я" data-ru="Кто я" data-en="Who I am">Хто я</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-target"/></svg><span data-ua="Профіль" data-ru="Профиль" data-en="Profile">Профіль</span></h2>
     </div>
-    <div class="section-count" data-ua="01 — профіль" data-en="01 — profile">01 — профіль</div>
+    <div class="section-count" data-ua="01 — профіль" data-ru="01 — профиль" data-en="01 — profile">01 — профіль</div>
   </div>
   <div class="ai-grid">
     <div class="ai-left rv">
-      <h2 class="ai-headline" data-ua="Продаю не знижку,<br>а <em>умови</em>" data-en="I sell terms,<br>not <em>discounts</em>">Продаю не знижку,<br>а <em>умови</em></h2>
-      <p class="ai-text" data-ua="Sales Manager / Business Development менеджер із 3+ роками досвіду в B2B-продажах у преміум-сегменті. Веду угоду повного циклу: пошук клієнта → вихід на ЛПР → переговори про комерційні умови → підписання → супровід і зростання обсягів." data-en="Sales Manager / Business Development Manager with 3+ years in premium-segment B2B sales. I run the full deal cycle: prospecting → reaching the decision maker → negotiating commercial terms → signing → account management and volume growth.">Sales Manager / Business Development менеджер із 3+ роками досвіду в B2B-продажах у преміум-сегменті. Веду угоду повного циклу: пошук клієнта → вихід на ЛПР → переговори про комерційні умови → підписання → супровід і зростання обсягів.</p>
+      <h2 class="ai-headline" data-ua="Продаю не знижку,<br>а <em>умови</em>" data-ru="Продаю не скидку,<br>а <em>условия</em>" data-en="I sell terms,<br>not <em>discounts</em>">Продаю не знижку,<br>а <em>умови</em></h2>
+      <p class="ai-text" data-ua="Sales Manager / Business Development менеджер із 3+ роками досвіду в B2B-продажах у преміум-сегменті. Веду угоду повного циклу: пошук клієнта → вихід на ЛПР → переговори про комерційні умови → підписання → супровід і зростання обсягів." data-ru="Sales Manager / Business Development менеджер с 3+ годами опыта в B2B-продажах в премиум-сегменте. Веду сделку полного цикла: поиск клиента → выход на ЛПР → переговоры о коммерческих условиях → подписание → сопровождение и рост объёмов." data-en="Sales Manager / Business Development Manager with 3+ years in premium-segment B2B sales. I run the full deal cycle: prospecting → reaching the decision maker → negotiating commercial terms → signing → account management and volume growth.">Sales Manager / Business Development менеджер із 3+ роками досвіду в B2B-продажах у преміум-сегменті. Веду угоду повного циклу: пошук клієнта → вихід на ЛПР → переговори про комерційні умови → підписання → супровід і зростання обсягів.</p>
       <ul class="ai-list">
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-briefcase"/></svg><span data-ua="B2B-продажі в преміум-сегменті: високий середній чек, довгий цикл угоди, кілька ЛПР на стороні клієнта" data-en="Premium-segment B2B sales: high average check, long deal cycle, several decision makers on the client side">B2B-продажі в преміум-сегменті: високий середній чек, довгий цикл угоди, кілька ЛПР на стороні клієнта</span></li>
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-deal"/></svg><span data-ua="Контракти від $10 000: переговори про ціну, обсяги, модель оплати та відтермінування платежів" data-en="Contracts from $10,000: negotiating price, volumes, payment model and deferred payments">Контракти від $10 000: переговори про ціну, обсяги, модель оплати та відтермінування платежів</span></li>
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-link"/></svg><span data-ua="Вихід на прямих замовників і заміщення посередників — зростання маржі та покращення умов" data-en="Going direct to advertisers and replacing intermediaries — higher margin and better terms">Вихід на прямих замовників і заміщення посередників — зростання маржі та покращення умов</span></li>
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-award"/></svg><span data-ua="Ексклюзивні домовленості з ключовими клієнтами" data-en="Exclusive agreements with key clients">Ексклюзивні домовленості з ключовими клієнтами</span></li>
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-negotiate"/></svg><span data-ua="Переговори: курси НЛП, робота із запереченнями, торг без автоматичної знижки" data-en="Negotiations: NLP training, objection handling, bargaining without automatic discounts">Переговори: курси НЛП, робота із запереченнями, торг без автоматичної знижки</span></li>
-        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-gear"/></svg><span data-ua="Технічний бекграунд: Python, n8n, інтеграції через API, AI-агенти та внутрішні інструменти" data-en="Technical background: Python, n8n, API integrations, AI agents and internal tools">Технічний бекграунд: Python, n8n, інтеграції через API, AI-агенти та внутрішні інструменти</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-briefcase"/></svg><span data-ua="B2B-продажі в преміум-сегменті: високий середній чек, довгий цикл угоди, кілька ЛПР на стороні клієнта" data-ru="B2B-продажи в премиум-сегменте: высокий средний чек, длинный цикл сделки, несколько ЛПР на стороне клиента" data-en="Premium-segment B2B sales: high average check, long deal cycle, several decision makers on the client side">B2B-продажі в преміум-сегменті: високий середній чек, довгий цикл угоди, кілька ЛПР на стороні клієнта</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-deal"/></svg><span data-ua="Контракти від $10 000: переговори про ціну, обсяги, модель оплати та відтермінування платежів" data-ru="Контракты от $10 000: переговоры о цене, объёмах, модели оплаты и отсрочке платежей" data-en="Contracts from $10,000: negotiating price, volumes, payment model and deferred payments">Контракти від $10 000: переговори про ціну, обсяги, модель оплати та відтермінування платежів</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-link"/></svg><span data-ua="Вихід на прямих замовників і заміщення посередників — зростання маржі та покращення умов" data-ru="Выход на прямых заказчиков и замещение посредников — рост маржи и улучшение условий" data-en="Going direct to advertisers and replacing intermediaries — higher margin and better terms">Вихід на прямих замовників і заміщення посередників — зростання маржі та покращення умов</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-award"/></svg><span data-ua="Ексклюзивні домовленості з ключовими клієнтами" data-ru="Эксклюзивные договорённости с ключевыми клиентами" data-en="Exclusive agreements with key clients">Ексклюзивні домовленості з ключовими клієнтами</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-negotiate"/></svg><span data-ua="Переговори: курси НЛП, робота із запереченнями, торг без автоматичної знижки" data-ru="Переговоры: курсы НЛП, работа с возражениями, торг без автоматической скидки" data-en="Negotiations: NLP training, objection handling, bargaining without automatic discounts">Переговори: курси НЛП, робота із запереченнями, торг без автоматичної знижки</span></li>
+        <li class="ic"><svg class="ico li-ico" aria-hidden="true"><use href="#i-gear"/></svg><span data-ua="Технічний бекграунд: Python, n8n, інтеграції через API, AI-агенти та внутрішні інструменти" data-ru="Технический бэкграунд: Python, n8n, интеграции через API, AI-агенты и внутренние инструменты" data-en="Technical background: Python, n8n, API integrations, AI agents and internal tools">Технічний бекграунд: Python, n8n, інтеграції через API, AI-агенти та внутрішні інструменти</span></li>
       </ul>
-      <a href="#skills" class="btn-primary" data-ua="Мої компетенції" data-en="My expertise">Мої компетенції</a>
+      <a href="#skills" class="btn-primary" data-ua="Мої компетенції" data-ru="Мои компетенции" data-en="My expertise">Мої компетенції</a>
     </div>
     <div class="ai-right rv d2">
-      <div class="ai-metric"><div class="ai-metric-val">$55K<span>+</span></div><div class="ai-metric-label" data-ua="Контракти<br>на місяць" data-en="Contracts<br>per month">Контракти<br>на місяць</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">$10K<span>+</span></div><div class="ai-metric-label" data-ua="Мінімальний<br>чек угоди" data-en="Minimum<br>deal size">Мінімальний<br>чек угоди</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">3<span>+</span></div><div class="ai-metric-label" data-ua="Роки<br>в B2B-продажах" data-en="Years<br>in B2B sales">Роки<br>в B2B-продажах</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">B<span>2</span></div><div class="ai-metric-label" data-ua="English<br>Upper Intermediate" data-en="English<br>Upper Intermediate">English<br>Upper Intermediate</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">$55K<span>+</span></div><div class="ai-metric-label" data-ua="Контракти<br>на місяць" data-ru="Контракты<br>в месяц" data-en="Contracts<br>per month">Контракти<br>на місяць</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">$10K<span>+</span></div><div class="ai-metric-label" data-ua="Мінімальний<br>чек угоди" data-ru="Минимальный<br>чек сделки" data-en="Minimum<br>deal size">Мінімальний<br>чек угоди</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">3<span>+</span></div><div class="ai-metric-label" data-ua="Роки<br>в B2B-продажах" data-ru="Годы<br>в B2B-продажах" data-en="Years<br>in B2B sales">Роки<br>в B2B-продажах</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">B<span>2</span></div><div class="ai-metric-label" data-ua="English<br>Upper Intermediate" data-ru="English<br>Upper Intermediate" data-en="English<br>Upper Intermediate">English<br>Upper Intermediate</div></div>
     </div>
   </div>
 </section>
@@ -532,64 +571,64 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="skills">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Що я вмію" data-en="What I do">Що я вмію</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-award"/></svg><span data-ua="Ключові компетенції" data-en="Core expertise">Ключові компетенції</span></h2>
+      <div class="section-label" data-ua="Що я вмію" data-ru="Что я умею" data-en="What I do">Що я вмію</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-award"/></svg><span data-ua="Ключові компетенції" data-ru="Ключевые компетенции" data-en="Core expertise">Ключові компетенції</span></h2>
     </div>
-    <div class="section-count" data-ua="09 — напрямів" data-en="09 — areas">09 — напрямів</div>
+    <div class="section-count" data-ua="09 — напрямів" data-ru="09 — направлений" data-en="09 — areas">09 — напрямів</div>
   </div>
   <div class="services-grid">
     <div class="service-card rv">
       <div class="service-num">01</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-briefcase"/></svg></div>
-      <div class="service-name" data-ua="B2B-продажі" data-en="B2B sales">B2B-продажі</div>
-      <p class="service-desc" data-ua="Преміум-сегмент: високий середній чек, довгий цикл угоди, кілька осіб на стороні клієнта. Укладення контрактів від $10 000." data-en="Premium segment: high average check, long deal cycle, several stakeholders on the client side. Contracts from $10,000.">Преміум-сегмент: високий середній чек, довгий цикл угоди, кілька осіб на стороні клієнта. Укладення контрактів від $10 000.</p>
+      <div class="service-name" data-ua="B2B-продажі" data-ru="B2B-продажи" data-en="B2B sales">B2B-продажі</div>
+      <p class="service-desc" data-ua="Преміум-сегмент: високий середній чек, довгий цикл угоди, кілька осіб на стороні клієнта. Укладення контрактів від $10 000." data-ru="Премиум-сегмент: высокий средний чек, длинный цикл сделки, несколько лиц на стороне клиента. Заключение контрактов от $10 000." data-en="Premium segment: high average check, long deal cycle, several stakeholders on the client side. Contracts from $10,000.">Преміум-сегмент: високий середній чек, довгий цикл угоди, кілька осіб на стороні клієнта. Укладення контрактів від $10 000.</p>
       <div class="service-tags"><span class="svc-tag">B2B</span><span class="svc-tag">Premium</span><span class="svc-tag">$10K+</span></div>
     </div>
     <div class="service-card rv d1">
       <div class="service-num">02</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-negotiate"/></svg></div>
-      <div class="service-name" data-ua="Переговори" data-en="Negotiations">Переговори</div>
-      <p class="service-desc" data-ua="Робота із запереченнями, торг без автоматичної знижки, утримання ціни аргументами. Курси НЛП, постійна робота з літературою з переговорів." data-en="Objection handling, bargaining without automatic discounts, defending price with arguments. NLP courses and constant work with negotiation literature.">Робота із запереченнями, торг без автоматичної знижки, утримання ціни аргументами. Курси НЛП, постійна робота з літературою з переговорів.</p>
-      <div class="service-tags"><span class="svc-tag">NLP</span><span class="svc-tag" data-ua="Заперечення" data-en="Objections">Заперечення</span><span class="svc-tag" data-ua="Без демпінгу" data-en="No dumping">Без демпінгу</span></div>
+      <div class="service-name" data-ua="Переговори" data-ru="Переговоры" data-en="Negotiations">Переговори</div>
+      <p class="service-desc" data-ua="Робота із запереченнями, торг без автоматичної знижки, утримання ціни аргументами. Курси НЛП, постійна робота з літературою з переговорів." data-ru="Работа с возражениями, торг без автоматической скидки, удержание цены аргументами. Курсы НЛП, постоянная работа с литературой по переговорам." data-en="Objection handling, bargaining without automatic discounts, defending price with arguments. NLP courses and constant work with negotiation literature.">Робота із запереченнями, торг без автоматичної знижки, утримання ціни аргументами. Курси НЛП, постійна робота з літературою з переговорів.</p>
+      <div class="service-tags"><span class="svc-tag">NLP</span><span class="svc-tag" data-ua="Заперечення" data-ru="Возражения" data-en="Objections">Заперечення</span><span class="svc-tag" data-ua="Без демпінгу" data-ru="Без демпинга" data-en="No dumping">Без демпінгу</span></div>
     </div>
     <div class="service-card rv d2">
       <div class="service-num">03</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-signal"/></svg></div>
-      <div class="service-name" data-ua="Продаж трафіку" data-en="Traffic sales">Продаж трафіку</div>
-      <p class="service-desc" data-ua="Профільна експертиза: продаж рекламних розміщень і трафіку брендам iGaming — флет-пакети з щомісячною підпискою, позиції в рейтингу, обсяг трафіку." data-en="Core expertise: selling ad placements and traffic to iGaming brands — flat packages with monthly subscription, ranking positions, traffic volume.">Профільна експертиза: продаж рекламних розміщень і трафіку брендам iGaming — флет-пакети з щомісячною підпискою, позиції в рейтингу, обсяг трафіку.</p>
-      <div class="service-tags"><span class="svc-tag">iGaming</span><span class="svc-tag">Flat</span><span class="svc-tag" data-ua="Рейтинги" data-en="Rankings">Рейтинги</span></div>
+      <div class="service-name" data-ua="Продаж трафіку" data-ru="Продажа трафика" data-en="Traffic sales">Продаж трафіку</div>
+      <p class="service-desc" data-ua="Профільна експертиза: продаж рекламних розміщень і трафіку брендам iGaming — флет-пакети з щомісячною підпискою, позиції в рейтингу, обсяг трафіку." data-ru="Профильная экспертиза: продажа рекламных размещений и трафика брендам iGaming — флет-пакеты с ежемесячной подпиской, позиции в рейтинге, объём трафика." data-en="Core expertise: selling ad placements and traffic to iGaming brands — flat packages with monthly subscription, ranking positions, traffic volume.">Профільна експертиза: продаж рекламних розміщень і трафіку брендам iGaming — флет-пакети з щомісячною підпискою, позиції в рейтингу, обсяг трафіку.</p>
+      <div class="service-tags"><span class="svc-tag">iGaming</span><span class="svc-tag">Flat</span><span class="svc-tag" data-ua="Рейтинги" data-ru="Рейтинги" data-en="Rankings">Рейтинги</span></div>
     </div>
     <div class="service-card rv">
       <div class="service-num">04</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg></div>
-      <div class="service-name" data-ua="Комерційні умови" data-en="Commercial terms">Комерційні умови</div>
-      <p class="service-desc" data-ua="Ціна, обсяги, модель оплати (фікс / підписка / % від результату), відтермінування платежів. Бонусні сітки та мотиваційні умови для нарощування обсягів." data-en="Price, volumes, payment model (fixed / subscription / % of result), deferred payments. Bonus grids and incentive terms to grow volumes.">Ціна, обсяги, модель оплати (фікс / підписка / % від результату), відтермінування платежів. Бонусні сітки та мотиваційні умови для нарощування обсягів.</p>
-      <div class="service-tags"><span class="svc-tag" data-ua="Бонусні сітки" data-en="Bonus grids">Бонусні сітки</span><span class="svc-tag" data-ua="Відтермінування" data-en="Deferred">Відтермінування</span></div>
+      <div class="service-name" data-ua="Комерційні умови" data-ru="Коммерческие условия" data-en="Commercial terms">Комерційні умови</div>
+      <p class="service-desc" data-ua="Ціна, обсяги, модель оплати (фікс / підписка / % від результату), відтермінування платежів. Бонусні сітки та мотиваційні умови для нарощування обсягів." data-ru="Цена, объёмы, модель оплаты (фикс / подписка / % от результата), отсрочка платежей. Бонусные сетки и мотивационные условия для наращивания объёмов." data-en="Price, volumes, payment model (fixed / subscription / % of result), deferred payments. Bonus grids and incentive terms to grow volumes.">Ціна, обсяги, модель оплати (фікс / підписка / % від результату), відтермінування платежів. Бонусні сітки та мотиваційні умови для нарощування обсягів.</p>
+      <div class="service-tags"><span class="svc-tag" data-ua="Бонусні сітки" data-ru="Бонусные сетки" data-en="Bonus grids">Бонусні сітки</span><span class="svc-tag" data-ua="Відтермінування" data-ru="Отсрочка" data-en="Deferred">Відтермінування</span></div>
     </div>
     <div class="service-card rv d1">
       <div class="service-num">05</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg></div>
       <div class="service-name">Account management</div>
-      <p class="service-desc" data-ua="Супровід чинних клієнтів, контроль виконання KPI, розбір спірних ситуацій. Онбординг нових партнерів і рекомендації щодо ефективного запуску." data-en="Managing existing clients, tracking KPI delivery, resolving disputes. Onboarding new partners and advising on an effective launch.">Супровід чинних клієнтів, контроль виконання KPI, розбір спірних ситуацій. Онбординг нових партнерів і рекомендації щодо ефективного запуску.</p>
+      <p class="service-desc" data-ua="Супровід чинних клієнтів, контроль виконання KPI, розбір спірних ситуацій. Онбординг нових партнерів і рекомендації щодо ефективного запуску." data-ru="Сопровождение действующих клиентов, контроль выполнения KPI, разбор спорных ситуаций. Онбординг новых партнёров и рекомендации по эффективному запуску." data-en="Managing existing clients, tracking KPI delivery, resolving disputes. Onboarding new partners and advising on an effective launch.">Супровід чинних клієнтів, контроль виконання KPI, розбір спірних ситуацій. Онбординг нових партнерів і рекомендації щодо ефективного запуску.</p>
       <div class="service-tags"><span class="svc-tag">KPI</span><span class="svc-tag">Onboarding</span><span class="svc-tag">Retention</span></div>
     </div>
     <div class="service-card rv d2">
       <div class="service-num">06</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-trend"/></svg></div>
-      <div class="service-name" data-ua="Retention і зростання чека" data-en="Retention & upsell">Retention і зростання чека</div>
-      <p class="service-desc" data-ua="Масштабування на нові ринки після успішного пілота, ексклюзивні домовленості з ключовими клієнтами, зростання обсягів у чинних партнерів." data-en="Scaling to new markets after a successful pilot, exclusive agreements with key clients, growing volumes with existing partners.">Масштабування на нові ринки після успішного пілота, ексклюзивні домовленості з ключовими клієнтами, зростання обсягів у чинних партнерів.</p>
-      <div class="service-tags"><span class="svc-tag">Upsell</span><span class="svc-tag" data-ua="Нові ринки" data-en="New markets">Нові ринки</span></div>
+      <div class="service-name" data-ua="Retention і зростання чека" data-ru="Retention и рост чека" data-en="Retention & upsell">Retention і зростання чека</div>
+      <p class="service-desc" data-ua="Масштабування на нові ринки після успішного пілота, ексклюзивні домовленості з ключовими клієнтами, зростання обсягів у чинних партнерів." data-ru="Масштабирование на новые рынки после успешного пилота, эксклюзивные договорённости с ключевыми клиентами, рост объёмов у действующих партнёров." data-en="Scaling to new markets after a successful pilot, exclusive agreements with key clients, growing volumes with existing partners.">Масштабування на нові ринки після успішного пілота, ексклюзивні домовленості з ключовими клієнтами, зростання обсягів у чинних партнерів.</p>
+      <div class="service-tags"><span class="svc-tag">Upsell</span><span class="svc-tag" data-ua="Нові ринки" data-ru="Новые рынки" data-en="New markets">Нові ринки</span></div>
     </div>
     <div class="service-card rv">
       <div class="service-num">07</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-analytics"/></svg></div>
-      <div class="service-name" data-ua="Аналітика та дані" data-en="Analytics & data">Аналітика та дані</div>
-      <p class="service-desc" data-ua="Unit-економіка угоди: CPL / CPA, CR за етапами воронки, EPC, ROI, ARPU, LTV. Звітність і презентація результатів клієнту мовою цифр." data-en="Deal unit economics: CPL / CPA, CR by funnel stage, EPC, ROI, ARPU, LTV. Reporting and presenting results to the client in numbers.">Unit-економіка угоди: CPL / CPA, CR за етапами воронки, EPC, ROI, ARPU, LTV. Звітність і презентація результатів клієнту мовою цифр.</p>
-      <div class="service-tags"><span class="svc-tag">Unit-ec.</span><span class="svc-tag">ROI · LTV</span><span class="svc-tag" data-ua="Звітність" data-en="Reporting">Звітність</span></div>
+      <div class="service-name" data-ua="Аналітика та дані" data-ru="Аналитика и данные" data-en="Analytics & data">Аналітика та дані</div>
+      <p class="service-desc" data-ua="Unit-економіка угоди: CPL / CPA, CR за етапами воронки, EPC, ROI, ARPU, LTV. Звітність і презентація результатів клієнту мовою цифр." data-ru="Unit-экономика сделки: CPL / CPA, CR по этапам воронки, EPC, ROI, ARPU, LTV. Отчётность и презентация результатов клиенту языком цифр." data-en="Deal unit economics: CPL / CPA, CR by funnel stage, EPC, ROI, ARPU, LTV. Reporting and presenting results to the client in numbers.">Unit-економіка угоди: CPL / CPA, CR за етапами воронки, EPC, ROI, ARPU, LTV. Звітність і презентація результатів клієнту мовою цифр.</p>
+      <div class="service-tags"><span class="svc-tag">Unit-ec.</span><span class="svc-tag">ROI · LTV</span><span class="svc-tag" data-ua="Звітність" data-ru="Отчётность" data-en="Reporting">Звітність</span></div>
     </div>
     <div class="service-card rv d1">
       <div class="service-num">08</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-split"/></svg></div>
-      <div class="service-name" data-ua="A/B та спліт-тести" data-en="A/B & split tests">A/B та спліт-тести</div>
-      <p class="service-desc" data-ua="Тестування офферів, лендингів і комерційних пропозицій. Рішення на основі даних, а не відчуттів." data-en="Testing offers, landing pages and commercial proposals. Decisions based on data, not gut feeling.">Тестування офферів, лендингів і комерційних пропозицій. Рішення на основі даних, а не відчуттів.</p>
-      <div class="service-tags"><span class="svc-tag">A/B</span><span class="svc-tag">Split</span><span class="svc-tag" data-ua="Оффери" data-en="Offers">Оффери</span></div>
+      <div class="service-name" data-ua="A/B та спліт-тести" data-ru="A/B и сплит-тесты" data-en="A/B & split tests">A/B та спліт-тести</div>
+      <p class="service-desc" data-ua="Тестування офферів, лендингів і комерційних пропозицій. Рішення на основі даних, а не відчуттів." data-ru="Тестирование офферов, лендингов и коммерческих предложений. Решения на основе данных, а не ощущений." data-en="Testing offers, landing pages and commercial proposals. Decisions based on data, not gut feeling.">Тестування офферів, лендингів і комерційних пропозицій. Рішення на основі даних, а не відчуттів.</p>
+      <div class="service-tags"><span class="svc-tag">A/B</span><span class="svc-tag">Split</span><span class="svc-tag" data-ua="Оффери" data-ru="Офферы" data-en="Offers">Оффери</span></div>
     </div>
     <div class="service-card rv d2">
       <div class="service-num">09</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-robot"/></svg></div>
-      <div class="service-name" data-ua="Автоматизація та AI" data-en="Automation & AI">Автоматизація та AI</div>
-      <p class="service-desc" data-ua="Python, n8n, інтеграції через API, AI-агенти на базі LLM, Telegram API, веброзробка. Закриваю рутину без залучення розробників." data-en="Python, n8n, API integrations, LLM-based AI agents, Telegram API, web development. I remove routine work without involving developers.">Python, n8n, інтеграції через API, AI-агенти на базі LLM, Telegram API, веброзробка. Закриваю рутину без залучення розробників.</p>
+      <div class="service-name" data-ua="Автоматизація та AI" data-ru="Автоматизация и AI" data-en="Automation & AI">Автоматизація та AI</div>
+      <p class="service-desc" data-ua="Python, n8n, інтеграції через API, AI-агенти на базі LLM, Telegram API, веброзробка. Закриваю рутину без залучення розробників." data-ru="Python, n8n, интеграции через API, AI-агенты на базе LLM, Telegram API, веб-разработка. Закрываю рутину без привлечения разработчиков." data-en="Python, n8n, API integrations, LLM-based AI agents, Telegram API, web development. I remove routine work without involving developers.">Python, n8n, інтеграції через API, AI-агенти на базі LLM, Telegram API, веброзробка. Закриваю рутину без залучення розробників.</p>
       <div class="service-tags"><span class="svc-tag">Python</span><span class="svc-tag">n8n</span><span class="svc-tag">LLM</span></div>
     </div>
   </div>
@@ -599,41 +638,41 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="process">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Як я працюю" data-en="How I work">Як я працюю</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-cycle"/></svg><span data-ua="Цикл угоди" data-en="Deal cycle">Цикл угоди</span></h2>
+      <div class="section-label" data-ua="Як я працюю" data-ru="Как я работаю" data-en="How I work">Як я працюю</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-cycle"/></svg><span data-ua="Цикл угоди" data-ru="Цикл сделки" data-en="Deal cycle">Цикл угоди</span></h2>
     </div>
-    <div class="section-count" data-ua="Пошук → Зростання" data-en="Prospecting → Growth">Пошук → Зростання</div>
+    <div class="section-count" data-ua="Пошук → Зростання" data-ru="Поиск → Рост" data-en="Prospecting → Growth">Пошук → Зростання</div>
   </div>
   <div class="process-track" id="processTrack">
     <div class="pstep">
       <div class="ps-dot"></div><div class="ps-num">01 — RESEARCH</div>
-      <div class="ps-title" data-ua="Пошук клієнта" data-en="Prospecting">Пошук клієнта</div>
-      <p class="ps-desc" data-ua="Збір бази під вертикаль і ринок, парсинг контактів, кваліфікація ліда до першого дзвінка. Розуміння, скільки клієнт реально може викупити." data-en="Building a target list per vertical and market, parsing contacts, qualifying the lead before the first call. Understanding what the client can actually buy.">Збір бази під вертикаль і ринок, парсинг контактів, кваліфікація ліда до першого дзвінка. Розуміння, скільки клієнт реально може викупити.</p>
-      <span class="ps-tag" data-ua="Парсинг · Кваліфікація" data-en="Parsing · Qualification">Парсинг · Кваліфікація</span>
+      <div class="ps-title" data-ua="Пошук клієнта" data-ru="Поиск клиента" data-en="Prospecting">Пошук клієнта</div>
+      <p class="ps-desc" data-ua="Збір бази під вертикаль і ринок, парсинг контактів, кваліфікація ліда до першого дзвінка. Розуміння, скільки клієнт реально може викупити." data-ru="Сбор базы под вертикаль и рынок, парсинг контактов, квалификация лида до первого звонка. Понимание, сколько клиент реально может выкупить." data-en="Building a target list per vertical and market, parsing contacts, qualifying the lead before the first call. Understanding what the client can actually buy.">Збір бази під вертикаль і ринок, парсинг контактів, кваліфікація ліда до першого дзвінка. Розуміння, скільки клієнт реально може викупити.</p>
+      <span class="ps-tag" data-ua="Парсинг · Кваліфікація" data-ru="Парсинг · Квалификация" data-en="Parsing · Qualification">Парсинг · Кваліфікація</span>
     </div>
     <div class="pstep">
       <div class="ps-dot"></div><div class="ps-num">02 — OUTREACH</div>
-      <div class="ps-title" data-ua="Вихід на ЛПР" data-en="Reaching the DM">Вихід на ЛПР</div>
-      <p class="ps-desc" data-ua="Персоналізований аутріч, обхід гейткіперів, вихід на прямого замовника замість посередника. Перша зустріч — уже про суть, а не про знайомство." data-en="Personalised outreach, getting past gatekeepers, reaching the direct advertiser instead of an intermediary. The first meeting is already about substance.">Персоналізований аутріч, обхід гейткіперів, вихід на прямого замовника замість посередника. Перша зустріч — уже про суть, а не про знайомство.</p>
-      <span class="ps-tag" data-ua="Аутріч · Прямі клієнти" data-en="Outreach · Direct clients">Аутріч · Прямі клієнти</span>
+      <div class="ps-title" data-ua="Вихід на ЛПР" data-ru="Выход на ЛПР" data-en="Reaching the DM">Вихід на ЛПР</div>
+      <p class="ps-desc" data-ua="Персоналізований аутріч, обхід гейткіперів, вихід на прямого замовника замість посередника. Перша зустріч — уже про суть, а не про знайомство." data-ru="Персонализированный аутрич, обход гейткиперов, выход на прямого заказчика вместо посредника. Первая встреча — уже по сути, а не про знакомство." data-en="Personalised outreach, getting past gatekeepers, reaching the direct advertiser instead of an intermediary. The first meeting is already about substance.">Персоналізований аутріч, обхід гейткіперів, вихід на прямого замовника замість посередника. Перша зустріч — уже про суть, а не про знайомство.</p>
+      <span class="ps-tag" data-ua="Аутріч · Прямі клієнти" data-ru="Аутрич · Прямые клиенты" data-en="Outreach · Direct clients">Аутріч · Прямі клієнти</span>
     </div>
     <div class="pstep">
       <div class="ps-dot"></div><div class="ps-num">03 — NEGOTIATE</div>
-      <div class="ps-title" data-ua="Переговори" data-en="Negotiation">Переговори</div>
-      <p class="ps-desc" data-ua="Зчитую справжню потребу за словами. Ціна, обсяги, модель оплати, відтермінування. Тримаю ціну аргументами, а не знижкою." data-en="I read the real need behind the words. Price, volumes, payment model, deferred payments. I defend the price with arguments, not discounts.">Зчитую справжню потребу за словами. Ціна, обсяги, модель оплати, відтермінування. Тримаю ціну аргументами, а не знижкою.</p>
-      <span class="ps-tag" data-ua="НЛП · Заперечення" data-en="NLP · Objections">НЛП · Заперечення</span>
+      <div class="ps-title" data-ua="Переговори" data-ru="Переговоры" data-en="Negotiation">Переговори</div>
+      <p class="ps-desc" data-ua="Зчитую справжню потребу за словами. Ціна, обсяги, модель оплати, відтермінування. Тримаю ціну аргументами, а не знижкою." data-ru="Считываю настоящую потребность за словами. Цена, объёмы, модель оплаты, отсрочка. Держу цену аргументами, а не скидкой." data-en="I read the real need behind the words. Price, volumes, payment model, deferred payments. I defend the price with arguments, not discounts.">Зчитую справжню потребу за словами. Ціна, обсяги, модель оплати, відтермінування. Тримаю ціну аргументами, а не знижкою.</p>
+      <span class="ps-tag" data-ua="НЛП · Заперечення" data-ru="НЛП · Возражения" data-en="NLP · Objections">НЛП · Заперечення</span>
     </div>
     <div class="pstep">
       <div class="ps-dot"></div><div class="ps-num">04 — CLOSE</div>
-      <div class="ps-title" data-ua="Підписання" data-en="Closing">Підписання</div>
-      <p class="ps-desc" data-ua="Фіксація домовленостей, узгодження KPI та умов оплати, старт пілота. Контракти від $10 000 з чіткою зоною відповідальності обох сторін." data-en="Locking the terms, agreeing KPIs and payment conditions, launching the pilot. Contracts from $10,000 with clear responsibility on both sides.">Фіксація домовленостей, узгодження KPI та умов оплати, старт пілота. Контракти від $10 000 з чіткою зоною відповідальності обох сторін.</p>
-      <span class="ps-tag" data-ua="Контракт · KPI" data-en="Contract · KPI">Контракт · KPI</span>
+      <div class="ps-title" data-ua="Підписання" data-ru="Подписание" data-en="Closing">Підписання</div>
+      <p class="ps-desc" data-ua="Фіксація домовленостей, узгодження KPI та умов оплати, старт пілота. Контракти від $10 000 з чіткою зоною відповідальності обох сторін." data-ru="Фиксация договорённостей, согласование KPI и условий оплаты, старт пилота. Контракты от $10 000 с чёткой зоной ответственности обеих сторон." data-en="Locking the terms, agreeing KPIs and payment conditions, launching the pilot. Contracts from $10,000 with clear responsibility on both sides.">Фіксація домовленостей, узгодження KPI та умов оплати, старт пілота. Контракти від $10 000 з чіткою зоною відповідальності обох сторін.</p>
+      <span class="ps-tag" data-ua="Контракт · KPI" data-ru="Контракт · KPI" data-en="Contract · KPI">Контракт · KPI</span>
     </div>
     <div class="pstep">
       <div class="ps-dot"></div><div class="ps-num">05 — GROW</div>
-      <div class="ps-title" data-ua="Супровід і зростання" data-en="Account growth">Супровід і зростання</div>
-      <p class="ps-desc" data-ua="Контроль KPI, звітність мовою цифр, розбір спірних ситуацій. Після успішного пілота — масштабування на нові ринки та зростання чека." data-en="KPI control, reporting in numbers, resolving disputes. After a successful pilot — scaling to new markets and growing the check.">Контроль KPI, звітність мовою цифр, розбір спірних ситуацій. Після успішного пілота — масштабування на нові ринки та зростання чека.</p>
-      <span class="ps-tag" data-ua="Retention · Upsell" data-en="Retention · Upsell">Retention · Upsell</span>
+      <div class="ps-title" data-ua="Супровід і зростання" data-ru="Сопровождение и рост" data-en="Account growth">Супровід і зростання</div>
+      <p class="ps-desc" data-ua="Контроль KPI, звітність мовою цифр, розбір спірних ситуацій. Після успішного пілота — масштабування на нові ринки та зростання чека." data-ru="Контроль KPI, отчётность языком цифр, разбор спорных ситуаций. После успешного пилота — масштабирование на новые рынки и рост чека." data-en="KPI control, reporting in numbers, resolving disputes. After a successful pilot — scaling to new markets and growing the check.">Контроль KPI, звітність мовою цифр, розбір спірних ситуацій. Після успішного пілота — масштабування на нові ринки та зростання чека.</p>
+      <span class="ps-tag" data-ua="Retention · Upsell" data-ru="Retention · Upsell" data-en="Retention · Upsell">Retention · Upsell</span>
     </div>
   </div>
 </section>
@@ -642,23 +681,23 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="approach" class="ai-section">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Про підхід до роботи" data-en="About my approach">Про підхід до роботи</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-negotiate"/></svg><span data-ua="Підхід" data-en="Approach">Підхід</span></h2>
+      <div class="section-label" data-ua="Про підхід до роботи" data-ru="О подходе к работе" data-en="About my approach">Про підхід до роботи</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-negotiate"/></svg><span data-ua="Підхід" data-ru="Подход" data-en="Approach">Підхід</span></h2>
     </div>
-    <div class="section-count" data-ua="Переговори — моя частина роботи" data-en="Negotiation is my part of the job">Переговори — моя частина роботи</div>
+    <div class="section-count" data-ua="Переговори — моя частина роботи" data-ru="Переговоры — моя часть работы" data-en="Negotiation is my part of the job">Переговори — моя частина роботи</div>
   </div>
   <div class="ai-grid">
     <div class="ai-left rv">
-      <h2 class="ai-headline" data-ua="Емпатія тут не про<br><em>зручність</em>,<br>а про точність" data-en="Empathy here is not about<br>being <em>agreeable</em>,<br>it is about precision">Емпатія тут не про<br><em>зручність</em>,<br>а про точність</h2>
-      <p class="ai-text" data-ua="Люблю переговори — це та частина роботи, заради якої я і в продажах. Добре зчитую співрозмовника: чую за словами справжню потребу і те, що людину насправді стримує." data-en="I like negotiating — it is the part of the job I am in sales for. I read the person across the table well: I hear the real need behind the words and what is actually holding them back.">Люблю переговори — це та частина роботи, заради якої я і в продажах. Добре зчитую співрозмовника: чую за словами справжню потребу і те, що людину насправді стримує.</p>
+      <h2 class="ai-headline" data-ua="Емпатія тут не про<br><em>зручність</em>,<br>а про точність" data-ru="Эмпатия здесь не про<br><em>удобство</em>,<br>а про точность" data-en="Empathy here is not about<br>being <em>agreeable</em>,<br>it is about precision">Емпатія тут не про<br><em>зручність</em>,<br>а про точність</h2>
+      <p class="ai-text" data-ua="Люблю переговори — це та частина роботи, заради якої я і в продажах. Добре зчитую співрозмовника: чую за словами справжню потребу і те, що людину насправді стримує." data-ru="Люблю переговоры — это та часть работы, ради которой я и в продажах. Хорошо считываю собеседника: слышу за словами настоящую потребность и то, что человека на самом деле сдерживает." data-en="I like negotiating — it is the part of the job I am in sales for. I read the person across the table well: I hear the real need behind the words and what is actually holding them back.">Люблю переговори — це та частина роботи, заради якої я і в продажах. Добре зчитую співрозмовника: чую за словами справжню потребу і те, що людину насправді стримує.</p>
     </div>
     <div class="rv d2">
       <ul class="ai-list">
-        <li data-ua="Тримаю темп розмови й бачу момент, коли варто дотиснути, а коли — відступити й дати паузу" data-en="I keep the pace of the conversation and see the moment to push and the moment to step back">Тримаю темп розмови й бачу момент, коли варто дотиснути, а коли — відступити й дати паузу</li>
-        <li data-ua="Коли розумієш мотив людини по інший бік столу — домовитися на вигідних для обох умовах значно простіше" data-en="When you understand the motive of the person on the other side, agreeing on terms that work for both is much easier">Коли розумієш мотив людини по інший бік столу — домовитися на вигідних для обох умовах значно простіше</li>
-        <li data-ua="Утримання ціни аргументами: торг без автоматичної знижки" data-en="Defending the price with arguments: bargaining without an automatic discount">Утримання ціни аргументами: торг без автоматичної знижки</li>
-        <li data-ua="Довгий цикл угоди і кілька осіб на стороні клієнта — звична робоча ситуація" data-en="A long deal cycle with several stakeholders on the client side is a normal working situation">Довгий цикл угоди і кілька осіб на стороні клієнта — звична робоча ситуація</li>
-        <li data-ua="Рішення та звітність — мовою цифр, а не обіцянок" data-en="Decisions and reporting in numbers, not promises">Рішення та звітність — мовою цифр, а не обіцянок</li>
+        <li data-ua="Тримаю темп розмови й бачу момент, коли варто дотиснути, а коли — відступити й дати паузу" data-ru="Держу темп разговора и вижу момент, когда стоит дожать, а когда — отступить и дать паузу" data-en="I keep the pace of the conversation and see the moment to push and the moment to step back">Тримаю темп розмови й бачу момент, коли варто дотиснути, а коли — відступити й дати паузу</li>
+        <li data-ua="Коли розумієш мотив людини по інший бік столу — домовитися на вигідних для обох умовах значно простіше" data-ru="Когда понимаешь мотив человека по другую сторону стола — договориться на выгодных для обоих условиях значительно проще" data-en="When you understand the motive of the person on the other side, agreeing on terms that work for both is much easier">Коли розумієш мотив людини по інший бік столу — домовитися на вигідних для обох умовах значно простіше</li>
+        <li data-ua="Утримання ціни аргументами: торг без автоматичної знижки" data-ru="Удержание цены аргументами: торг без автоматической скидки" data-en="Defending the price with arguments: bargaining without an automatic discount">Утримання ціни аргументами: торг без автоматичної знижки</li>
+        <li data-ua="Довгий цикл угоди і кілька осіб на стороні клієнта — звична робоча ситуація" data-ru="Длинный цикл сделки и несколько лиц на стороне клиента — привычная рабочая ситуация" data-en="A long deal cycle with several stakeholders on the client side is a normal working situation">Довгий цикл угоди і кілька осіб на стороні клієнта — звична робоча ситуація</li>
+        <li data-ua="Рішення та звітність — мовою цифр, а не обіцянок" data-ru="Решения и отчётность — языком цифр, а не обещаний" data-en="Decisions and reporting in numbers, not promises">Рішення та звітність — мовою цифр, а не обіцянок</li>
       </ul>
     </div>
   </div>
@@ -668,59 +707,59 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="automation">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Технічний бекграунд" data-en="Technical background">Технічний бекграунд</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-chip"/></svg><span data-ua="Автоматизація та AI" data-en="Automation &amp; AI">Автоматизація та AI</span></h2>
+      <div class="section-label" data-ua="Технічний бекграунд" data-ru="Технический бэкграунд" data-en="Technical background">Технічний бекграунд</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-chip"/></svg><span data-ua="Автоматизація та AI" data-ru="Автоматизация и AI" data-en="Automation &amp; AI">Автоматизація та AI</span></h2>
     </div>
-    <div class="section-count" data-ua="05 — інструментів" data-en="05 — tools">05 — інструментів</div>
+    <div class="section-count" data-ua="05 — інструментів" data-ru="05 — инструментов" data-en="05 — tools">05 — інструментів</div>
   </div>
   <div class="ai-grid" style="margin-bottom:60px;">
     <div class="ai-left rv">
-      <h2 class="ai-headline" data-ua="Закриваю рутину<br><em>без розробників</em>" data-en="I remove routine work<br><em>without developers</em>">Закриваю рутину<br><em>без розробників</em></h2>
-      <p class="ai-text" data-ua="Окрім продажів маю технічний бекграунд і самостійно будую системи автоматизації. Розробка софту під задачі бізнесу (team soft) — внутрішні інструменти та SaaS-застосунки: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою." data-en="Beyond sales I have a technical background and build automation systems myself. Team soft — internal tools and SaaS apps for the business: dashboards, deal tracking, automated reporting. Full cycle, from spec to deployment.">Окрім продажів маю технічний бекграунд і самостійно будую системи автоматизації. Розробка софту під задачі бізнесу (team soft) — внутрішні інструменти та SaaS-застосунки: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою.</p>
+      <h2 class="ai-headline" data-ua="Закриваю рутину<br><em>без розробників</em>" data-ru="Закрываю рутину<br><em>без разработчиков</em>" data-en="I remove routine work<br><em>without developers</em>">Закриваю рутину<br><em>без розробників</em></h2>
+      <p class="ai-text" data-ua="Окрім продажів маю технічний бекграунд і самостійно будую системи автоматизації. Розробка софту під задачі бізнесу (team soft) — внутрішні інструменти та SaaS-застосунки: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою." data-ru="Кроме продаж имею технический бэкграунд и самостоятельно строю системы автоматизации. Разработка софта под задачи бизнеса (team soft) — внутренние инструменты и SaaS-приложения: дашборды, учёт сделок, автоматическая отчётность. Полный цикл, от ТЗ до деплоя." data-en="Beyond sales I have a technical background and build automation systems myself. Team soft — internal tools and SaaS apps for the business: dashboards, deal tracking, automated reporting. Full cycle, from spec to deployment.">Окрім продажів маю технічний бекграунд і самостійно будую системи автоматизації. Розробка софту під задачі бізнесу (team soft) — внутрішні інструменти та SaaS-застосунки: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою.</p>
     </div>
     <div class="ai-right rv d2">
-      <div class="ai-metric"><div class="ai-metric-val">Py</div><div class="ai-metric-label" data-ua="Python<br>скрипти та API" data-en="Python<br>scripts & API">Python<br>скрипти та API</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">n8n</div><div class="ai-metric-label" data-ua="Low-code<br>workflow" data-en="Low-code<br>workflow">Low-code<br>workflow</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">LLM</div><div class="ai-metric-label" data-ua="AI-агенти<br>Claude · GPT" data-en="AI agents<br>Claude · GPT">AI-агенти<br>Claude · GPT</div></div>
-      <div class="ai-metric"><div class="ai-metric-val">TG</div><div class="ai-metric-label" data-ua="Telegram API<br>боти та розсилки" data-en="Telegram API<br>bots & outreach">Telegram API<br>боти та розсилки</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">Py</div><div class="ai-metric-label" data-ua="Python<br>скрипти та API" data-ru="Python<br>скрипты и API" data-en="Python<br>scripts & API">Python<br>скрипти та API</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">n8n</div><div class="ai-metric-label" data-ua="Low-code<br>workflow" data-ru="Low-code<br>workflow" data-en="Low-code<br>workflow">Low-code<br>workflow</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">LLM</div><div class="ai-metric-label" data-ua="AI-агенти<br>Claude · GPT" data-ru="AI-агенты<br>Claude · GPT" data-en="AI agents<br>Claude · GPT">AI-агенти<br>Claude · GPT</div></div>
+      <div class="ai-metric"><div class="ai-metric-val">TG</div><div class="ai-metric-label" data-ua="Telegram API<br>боти та розсилки" data-ru="Telegram API<br>боты и рассылки" data-en="Telegram API<br>bots & outreach">Telegram API<br>боти та розсилки</div></div>
     </div>
   </div>
   <div class="services-grid">
     <div class="service-card rv">
       <div class="service-num">01 · PYTHON</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-code"/></svg></div>
-      <div class="service-name" data-ua="Скрипти та парсинг" data-en="Scripts & parsing">Скрипти та парсинг</div>
-      <p class="service-desc" data-ua="Автоматизація, авторозсилки, інтеграції через API, парсинг (збір інформації та контактів із подальшою авторозсилкою), обробка даних, автоматична звітність." data-en="Automation, auto-outreach, API integrations, parsing (collecting data and contacts with follow-up outreach), data processing, automated reporting.">Автоматизація, авторозсилки, інтеграції через API, парсинг (збір інформації та контактів із подальшою авторозсилкою), обробка даних, автоматична звітність.</p>
-      <div class="service-tags"><span class="svc-tag">API</span><span class="svc-tag">Parsing</span><span class="svc-tag" data-ua="Звітність" data-en="Reporting">Звітність</span></div>
+      <div class="service-name" data-ua="Скрипти та парсинг" data-ru="Скрипты и парсинг" data-en="Scripts & parsing">Скрипти та парсинг</div>
+      <p class="service-desc" data-ua="Автоматизація, авторозсилки, інтеграції через API, парсинг (збір інформації та контактів із подальшою авторозсилкою), обробка даних, автоматична звітність." data-ru="Автоматизация, авторассылки, интеграции через API, парсинг (сбор информации и контактов с последующей авторассылкой), обработка данных, автоматическая отчётность." data-en="Automation, auto-outreach, API integrations, parsing (collecting data and contacts with follow-up outreach), data processing, automated reporting.">Автоматизація, авторозсилки, інтеграції через API, парсинг (збір інформації та контактів із подальшою авторозсилкою), обробка даних, автоматична звітність.</p>
+      <div class="service-tags"><span class="svc-tag">API</span><span class="svc-tag">Parsing</span><span class="svc-tag" data-ua="Звітність" data-ru="Отчётность" data-en="Reporting">Звітність</span></div>
     </div>
     <div class="service-card rv d1">
       <div class="service-num">02 · N8N</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-nodes"/></svg></div>
-      <div class="service-name" data-ua="Low-code workflow" data-en="Low-code workflow">Low-code workflow</div>
-      <p class="service-desc" data-ua="Зв'язка CRM ↔ пошта ↔ месенджери ↔ таблиці, автоматична обробка вхідних лідів, сповіщення команді, регулярні звіти за розкладом." data-en="CRM ↔ email ↔ messengers ↔ spreadsheets, automatic processing of inbound leads, team notifications, scheduled recurring reports.">Зв'язка CRM ↔ пошта ↔ месенджери ↔ таблиці, автоматична обробка вхідних лідів, сповіщення команді, регулярні звіти за розкладом.</p>
+      <div class="service-name" data-ua="Low-code workflow" data-ru="Low-code workflow" data-en="Low-code workflow">Low-code workflow</div>
+      <p class="service-desc" data-ua="Зв'язка CRM ↔ пошта ↔ месенджери ↔ таблиці, автоматична обробка вхідних лідів, сповіщення команді, регулярні звіти за розкладом." data-ru="Связка CRM ↔ почта ↔ мессенджеры ↔ таблицы, автоматическая обработка входящих лидов, уведомления команде, регулярные отчёты по расписанию." data-en="CRM ↔ email ↔ messengers ↔ spreadsheets, automatic processing of inbound leads, team notifications, scheduled recurring reports.">Зв'язка CRM ↔ пошта ↔ месенджери ↔ таблиці, автоматична обробка вхідних лідів, сповіщення команді, регулярні звіти за розкладом.</p>
       <div class="service-tags"><span class="svc-tag">CRM</span><span class="svc-tag">Leads</span><span class="svc-tag">Reports</span></div>
     </div>
     <div class="service-card rv d2">
       <div class="service-num">03 · LLM</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-llm"/></svg></div>
-      <div class="service-name" data-ua="AI-агенти" data-en="AI agents">AI-агенти</div>
-      <p class="service-desc" data-ua="Кваліфікація вхідних лідів, персоналізований аутріч, автовідповіді на типові запити, підготовка комерційних пропозицій, аналіз переписки; промпт-інжиніринг." data-en="Inbound lead qualification, personalised outreach, auto-replies to routine requests, preparing commercial proposals, conversation analysis; prompt engineering.">Кваліфікація вхідних лідів, персоналізований аутріч, автовідповіді на типові запити, підготовка комерційних пропозицій, аналіз переписки; промпт-інжиніринг.</p>
+      <div class="service-name" data-ua="AI-агенти" data-ru="AI-агенты" data-en="AI agents">AI-агенти</div>
+      <p class="service-desc" data-ua="Кваліфікація вхідних лідів, персоналізований аутріч, автовідповіді на типові запити, підготовка комерційних пропозицій, аналіз переписки; промпт-інжиніринг." data-ru="Квалификация входящих лидов, персонализированный аутрич, автоответы на типовые запросы, подготовка коммерческих предложений, анализ переписки; промпт-инжиниринг." data-en="Inbound lead qualification, personalised outreach, auto-replies to routine requests, preparing commercial proposals, conversation analysis; prompt engineering.">Кваліфікація вхідних лідів, персоналізований аутріч, автовідповіді на типові запити, підготовка комерційних пропозицій, аналіз переписки; промпт-інжиніринг.</p>
       <div class="service-tags"><span class="svc-tag">Claude</span><span class="svc-tag">GPT</span><span class="svc-tag">Prompting</span></div>
     </div>
     <div class="service-card rv">
       <div class="service-num">04 · TELEGRAM</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-send"/></svg></div>
-      <div class="service-name" data-ua="Боти та Mini Apps" data-en="Bots & Mini Apps">Боти та Mini Apps</div>
-      <p class="service-desc" data-ua="Боти й автоматизація комунікації, мультиакаунтні системи розсилок, Telegram Mini Apps як інтерфейс до внутрішніх систем." data-en="Bots and communication automation, multi-account outreach systems, Telegram Mini Apps as an interface to internal systems.">Боти й автоматизація комунікації, мультиакаунтні системи розсилок, Telegram Mini Apps як інтерфейс до внутрішніх систем.</p>
+      <div class="service-name" data-ua="Боти та Mini Apps" data-ru="Боты и Mini Apps" data-en="Bots & Mini Apps">Боти та Mini Apps</div>
+      <p class="service-desc" data-ua="Боти й автоматизація комунікації, мультиакаунтні системи розсилок, Telegram Mini Apps як інтерфейс до внутрішніх систем." data-ru="Боты и автоматизация коммуникации, мультиаккаунтные системы рассылок, Telegram Mini Apps как интерфейс к внутренним системам." data-en="Bots and communication automation, multi-account outreach systems, Telegram Mini Apps as an interface to internal systems.">Боти й автоматизація комунікації, мультиакаунтні системи розсилок, Telegram Mini Apps як інтерфейс до внутрішніх систем.</p>
       <div class="service-tags"><span class="svc-tag">Bot API</span><span class="svc-tag">Mini App</span><span class="svc-tag">WebView</span></div>
     </div>
     <div class="service-card rv d1">
       <div class="service-num">05 · WEB</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-browser"/></svg></div>
-      <div class="service-name" data-ua="Веброзробка" data-en="Web development">Веброзробка</div>
-      <p class="service-desc" data-ua="Лендинги та сайти під задачі продажу, презентації, комерційні пропозиції; SEO-оптимізація, деплой." data-en="Landing pages and sites built for sales tasks, presentations and commercial proposals; SEO optimisation and deployment.">Лендинги та сайти під задачі продажу, презентації, комерційні пропозиції; SEO-оптимізація, деплой.</p>
+      <div class="service-name" data-ua="Веброзробка" data-ru="Веб-разработка" data-en="Web development">Веброзробка</div>
+      <p class="service-desc" data-ua="Лендинги та сайти під задачі продажу, презентації, комерційні пропозиції; SEO-оптимізація, деплой." data-ru="Лендинги и сайты под задачи продаж, презентации, коммерческие предложения; SEO-оптимизация, деплой." data-en="Landing pages and sites built for sales tasks, presentations and commercial proposals; SEO optimisation and deployment.">Лендинги та сайти під задачі продажу, презентації, комерційні пропозиції; SEO-оптимізація, деплой.</p>
       <div class="service-tags"><span class="svc-tag">Landing</span><span class="svc-tag">SEO</span><span class="svc-tag">Deploy</span></div>
     </div>
     <div class="service-card rv d2">
       <div class="service-num">06 · TEAM SOFT</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-stack"/></svg></div>
-      <div class="service-name" data-ua="Софт під задачі бізнесу" data-en="Software for the business">Софт під задачі бізнесу</div>
-      <p class="service-desc" data-ua="Внутрішні інструменти та SaaS-застосунки для оптимізації роботи команди: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою." data-en="Internal tools and SaaS apps to optimise the team workflow: dashboards, deal tracking, automated reporting. Full cycle, from spec to deployment.">Внутрішні інструменти та SaaS-застосунки для оптимізації роботи команди: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою.</p>
-      <div class="service-tags"><span class="svc-tag">SaaS</span><span class="svc-tag">Dashboards</span><span class="svc-tag" data-ua="Від ТЗ до деплою" data-en="Spec to deploy">Від ТЗ до деплою</span></div>
+      <div class="service-name" data-ua="Софт під задачі бізнесу" data-ru="Софт под задачи бизнеса" data-en="Software for the business">Софт під задачі бізнесу</div>
+      <p class="service-desc" data-ua="Внутрішні інструменти та SaaS-застосунки для оптимізації роботи команди: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою." data-ru="Внутренние инструменты и SaaS-приложения для оптимизации работы команды: дашборды, учёт сделок, автоматическая отчётность. Полный цикл, от ТЗ до деплоя." data-en="Internal tools and SaaS apps to optimise the team workflow: dashboards, deal tracking, automated reporting. Full cycle, from spec to deployment.">Внутрішні інструменти та SaaS-застосунки для оптимізації роботи команди: дашборди, облік угод, автоматична звітність. Повний цикл, від ТЗ до деплою.</p>
+      <div class="service-tags"><span class="svc-tag">SaaS</span><span class="svc-tag">Dashboards</span><span class="svc-tag" data-ua="Від ТЗ до деплою" data-ru="От ТЗ до деплоя" data-en="Spec to deploy">Від ТЗ до деплою</span></div>
     </div>
   </div>
 </section>
@@ -729,16 +768,16 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="projects" class="ai-section">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Приклади робіт" data-en="Selected work">Приклади робіт</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-launch"/></svg><span data-ua="Проєкти" data-en="Projects">Проєкти</span></h2>
+      <div class="section-label" data-ua="Приклади робіт" data-ru="Примеры работ" data-en="Selected work">Приклади робіт</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-launch"/></svg><span data-ua="Проєкти" data-ru="Проекты" data-en="Projects">Проєкти</span></h2>
     </div>
-    <div class="section-count" data-ua="02 — кейси" data-en="02 — cases">02 — кейси</div>
+    <div class="section-count" data-ua="02 — кейси" data-ru="02 — кейсы" data-en="02 — cases">02 — кейси</div>
   </div>
   <div class="services-grid" style="grid-template-columns:repeat(2,1fr);">
     <div class="service-card rv">
       <div class="service-num">01 · TEAM SOFT</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></div>
-      <div class="service-name" data-ua="Платформа автоматизації Facebook Ads" data-en="Facebook Ads automation platform">Платформа автоматизації Facebook Ads</div>
-      <p class="service-desc" data-ua="Керування 11 рекламними кабінетами через Telegram Mini App (WebView) з 5 AI-агентами. Масштабувати робочу зв'язку або зупинити неефективний ad set — в один тап, прямо з телефону." data-en="Managing 11 ad accounts through a Telegram Mini App (WebView) with 5 AI agents. Scale a working setup or stop an underperforming ad set in one tap, straight from the phone.">Платформа автоматизації для Facebook Ads арбітражу — керування 11 кабінетами через Telegram Mini App (WebView) з 5 AI-агентами. Масштабувати робочу зв'язку або зупинити неефективний ad set в один тап, прямо з телефону.</p>
+      <div class="service-name" data-ua="Платформа автоматизації Facebook Ads" data-ru="Платформа автоматизации Facebook Ads" data-en="Facebook Ads automation platform">Платформа автоматизації Facebook Ads</div>
+      <p class="service-desc" data-ua="Керування 11 рекламними кабінетами через Telegram Mini App (WebView) з 5 AI-агентами. Масштабувати робочу зв'язку або зупинити неефективний ad set — в один тап, прямо з телефону." data-ru="Управление 11 рекламными кабинетами через Telegram Mini App (WebView) с 5 AI-агентами. Масштабировать рабочую связку или остановить неэффективный ad set — в один тап, прямо с телефона." data-en="Managing 11 ad accounts through a Telegram Mini App (WebView) with 5 AI agents. Scale a working setup or stop an underperforming ad set in one tap, straight from the phone.">Платформа автоматизації для Facebook Ads арбітражу — керування 11 кабінетами через Telegram Mini App (WebView) з 5 AI-агентами. Масштабувати робочу зв'язку або зупинити неефективний ad set в один тап, прямо з телефону.</p>
       <div class="service-tags"><span class="svc-tag">Mini App</span><span class="svc-tag">FB Marketing API</span><span class="svc-tag">5 AI agents</span></div>
       <div class="proj-links">
         <a class="proj-link" href="https://fx-socialclub.github.io/FB_bot" target="_blank" rel="noopener">WebView — fx-socialclub.github.io/FB_bot</a>
@@ -747,8 +786,8 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
     </div>
     <div class="service-card rv d1">
       <div class="service-num">02 · WEB</div><div class="service-icon"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg></div>
-      <div class="service-name" data-ua="Weekly Plan — вебдодаток" data-en="Weekly Plan — web app">Weekly Plan — вебдодаток</div>
-      <p class="service-desc" data-ua="Приклад веброзробки під задачі команди: планування та структурування роботи на тиждень. Верстка, логіка, деплой — повністю самостійно." data-en="An example of web development for team needs: planning and structuring the working week. Layout, logic and deployment done entirely solo.">Приклад веброзробки під задачі команди: планування та структурування роботи на тиждень. Верстка, логіка, деплой — повністю самостійно.</p>
+      <div class="service-name" data-ua="Weekly Plan — вебдодаток" data-ru="Weekly Plan — веб-приложение" data-en="Weekly Plan — web app">Weekly Plan — вебдодаток</div>
+      <p class="service-desc" data-ua="Приклад веброзробки під задачі команди: планування та структурування роботи на тиждень. Верстка, логіка, деплой — повністю самостійно." data-ru="Пример веб-разработки под задачи команды: планирование и структурирование работы на неделю. Вёрстка, логика, деплой — полностью самостоятельно." data-en="An example of web development for team needs: planning and structuring the working week. Layout, logic and deployment done entirely solo.">Приклад веброзробки під задачі команди: планування та структурування роботи на тиждень. Верстка, логіка, деплой — повністю самостійно.</p>
       <div class="service-tags"><span class="svc-tag">HTML/CSS/JS</span><span class="svc-tag">GitHub Pages</span><span class="svc-tag">SEO</span></div>
       <div class="proj-links">
         <a class="proj-link" href="https://anubis-crypto-ai.github.io/Weekly-plan" target="_blank" rel="noopener">anubis-crypto-ai.github.io/Weekly-plan</a>
@@ -761,16 +800,16 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="results">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Цифри" data-en="Numbers">Цифри</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-chart"/></svg><span data-ua="Ключові досягнення" data-en="Key achievements">Ключові досягнення</span></h2>
+      <div class="section-label" data-ua="Цифри" data-ru="Цифры" data-en="Numbers">Цифри</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-chart"/></svg><span data-ua="Ключові досягнення" data-ru="Ключевые достижения" data-en="Key achievements">Ключові досягнення</span></h2>
     </div>
-    <div class="section-count" data-ua="04 — показники" data-en="04 — metrics">04 — показники</div>
+    <div class="section-count" data-ua="04 — показники" data-ru="04 — показатели" data-en="04 — metrics">04 — показники</div>
   </div>
   <div class="metrics-row">
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-money"/></svg></div><div class="mrow-val">$55 000<span>+</span></div><div class="mrow-lbl" data-ua="КОНТРАКТИ НА МІСЯЦЬ · ПРОДАЖ ТРАФІКУ ДЛЯ КАЗИНО" data-en="CONTRACTS PER MONTH · SELLING TRAFFIC FOR CASINO BRANDS">КОНТРАКТИ НА МІСЯЦЬ · ПРОДАЖ ТРАФІКУ ДЛЯ КАЗИНО</div></div>
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-deal"/></svg></div><div class="mrow-val">$10 000<span>+</span></div><div class="mrow-lbl" data-ua="МІНІМАЛЬНИЙ ЧЕК УКЛАДЕНОЇ УГОДИ" data-en="MINIMUM SIZE OF A CLOSED DEAL">МІНІМАЛЬНИЙ ЧЕК УКЛАДЕНОЇ УГОДИ</div></div>
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-gear"/></svg></div><div class="mrow-val">11</div><div class="mrow-lbl" data-ua="РЕКЛАМНИХ КАБІНЕТІВ У ВЛАСНОМУ СОФТІ ДЛЯ КОМАНДИ" data-en="AD ACCOUNTS RUN THROUGH MY OWN TEAM SOFTWARE">РЕКЛАМНИХ КАБІНЕТІВ У ВЛАСНОМУ СОФТІ ДЛЯ КОМАНДИ</div></div>
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-robot"/></svg></div><div class="mrow-val">5</div><div class="mrow-lbl" data-ua="AI-АГЕНТІВ У ВЛАСНІЙ СИСТЕМІ АВТОМАТИЗАЦІЇ" data-en="AI AGENTS INSIDE MY OWN AUTOMATION SYSTEM">AI-АГЕНТІВ У ВЛАСНІЙ СИСТЕМІ АВТОМАТИЗАЦІЇ</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-money"/></svg></div><div class="mrow-val">$55 000<span>+</span></div><div class="mrow-lbl" data-ua="КОНТРАКТИ НА МІСЯЦЬ · ПРОДАЖ ТРАФІКУ ДЛЯ КАЗИНО" data-ru="КОНТРАКТЫ В МЕСЯЦ · ПРОДАЖА ТРАФИКА ДЛЯ КАЗИНО" data-en="CONTRACTS PER MONTH · SELLING TRAFFIC FOR CASINO BRANDS">КОНТРАКТИ НА МІСЯЦЬ · ПРОДАЖ ТРАФІКУ ДЛЯ КАЗИНО</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-deal"/></svg></div><div class="mrow-val">$10 000<span>+</span></div><div class="mrow-lbl" data-ua="МІНІМАЛЬНИЙ ЧЕК УКЛАДЕНОЇ УГОДИ" data-ru="МИНИМАЛЬНЫЙ ЧЕК ЗАКЛЮЧЁННОЙ СДЕЛКИ" data-en="MINIMUM SIZE OF A CLOSED DEAL">МІНІМАЛЬНИЙ ЧЕК УКЛАДЕНОЇ УГОДИ</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-gear"/></svg></div><div class="mrow-val">11</div><div class="mrow-lbl" data-ua="РЕКЛАМНИХ КАБІНЕТІВ У ВЛАСНОМУ СОФТІ ДЛЯ КОМАНДИ" data-ru="РЕКЛАМНЫХ КАБИНЕТОВ В СОБСТВЕННОМ СОФТЕ ДЛЯ КОМАНДЫ" data-en="AD ACCOUNTS RUN THROUGH MY OWN TEAM SOFTWARE">РЕКЛАМНИХ КАБІНЕТІВ У ВЛАСНОМУ СОФТІ ДЛЯ КОМАНДИ</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-robot"/></svg></div><div class="mrow-val">5</div><div class="mrow-lbl" data-ua="AI-АГЕНТІВ У ВЛАСНІЙ СИСТЕМІ АВТОМАТИЗАЦІЇ" data-ru="AI-АГЕНТОВ В СОБСТВЕННОЙ СИСТЕМЕ АВТОМАТИЗАЦИИ" data-en="AI AGENTS INSIDE MY OWN AUTOMATION SYSTEM">AI-АГЕНТІВ У ВЛАСНІЙ СИСТЕМІ АВТОМАТИЗАЦІЇ</div></div>
   </div>
 </section>
 
@@ -778,14 +817,14 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="edu" class="ai-section">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Освіта" data-en="Education">Освіта</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-cap"/></svg><span data-ua="Курси та сертифікати" data-en="Courses &amp; certificates">Курси та сертифікати</span></h2>
+      <div class="section-label" data-ua="Освіта" data-ru="Образование" data-en="Education">Освіта</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-cap"/></svg><span data-ua="Курси та сертифікати" data-ru="Курсы и сертификаты" data-en="Courses &amp; certificates">Курси та сертифікати</span></h2>
     </div>
-    <div class="section-count" data-ua="02 — програми" data-en="02 — programmes">02 — програми</div>
+    <div class="section-count" data-ua="02 — програми" data-ru="02 — программы" data-en="02 — programmes">02 — програми</div>
   </div>
   <div class="metrics-row" style="grid-template-columns:1fr 1fr;">
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-robot"/></svg></div><div class="mrow-val">AI</div><div class="mrow-lbl" data-ua="ПРАКТИЧНИЙ КУРС З AI-ІНСТРУМЕНТІВ ТА АВТОМАТИЗАЦІЇ РОБОЧИХ ПРОЦЕСІВ (LLM, ПРОМПТ-ІНЖИНІРИНГ)" data-en="PRACTICAL COURSE IN AI TOOLS AND WORKFLOW AUTOMATION (LLM, PROMPT ENGINEERING)">ПРАКТИЧНИЙ КУРС З AI-ІНСТРУМЕНТІВ ТА АВТОМАТИЗАЦІЇ РОБОЧИХ ПРОЦЕСІВ (LLM, ПРОМПТ-ІНЖИНІРИНГ)</div></div>
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-negotiate"/></svg></div><div class="mrow-val">НЛП</div><div class="mrow-lbl" data-ua="КУРС ПЕРЕГОВОРНИХ ТЕХНІК І КОМУНІКАЦІЇ (НЛП)" data-en="COURSE IN NEGOTIATION TECHNIQUES AND COMMUNICATION (NLP)">КУРС ПЕРЕГОВОРНИХ ТЕХНІК І КОМУНІКАЦІЇ (НЛП)</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-robot"/></svg></div><div class="mrow-val">AI</div><div class="mrow-lbl" data-ua="ПРАКТИЧНИЙ КУРС З AI-ІНСТРУМЕНТІВ ТА АВТОМАТИЗАЦІЇ РОБОЧИХ ПРОЦЕСІВ (LLM, ПРОМПТ-ІНЖИНІРИНГ)" data-ru="ПРАКТИЧЕСКИЙ КУРС ПО AI-ИНСТРУМЕНТАМ И АВТОМАТИЗАЦИИ РАБОЧИХ ПРОЦЕССОВ (LLM, ПРОМПТ-ИНЖИНИРИНГ)" data-en="PRACTICAL COURSE IN AI TOOLS AND WORKFLOW AUTOMATION (LLM, PROMPT ENGINEERING)">ПРАКТИЧНИЙ КУРС З AI-ІНСТРУМЕНТІВ ТА АВТОМАТИЗАЦІЇ РОБОЧИХ ПРОЦЕСІВ (LLM, ПРОМПТ-ІНЖИНІРИНГ)</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-negotiate"/></svg></div><div class="mrow-val">НЛП</div><div class="mrow-lbl" data-ua="КУРС ПЕРЕГОВОРНИХ ТЕХНІК І КОМУНІКАЦІЇ (НЛП)" data-ru="КУРС ПЕРЕГОВОРНЫХ ТЕХНИК И КОММУНИКАЦИИ (НЛП)" data-en="COURSE IN NEGOTIATION TECHNIQUES AND COMMUNICATION (NLP)">КУРС ПЕРЕГОВОРНИХ ТЕХНІК І КОМУНІКАЦІЇ (НЛП)</div></div>
   </div>
 </section>
 
@@ -793,22 +832,22 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
 <section id="langs">
   <div class="section-header rv">
     <div>
-      <div class="section-label" data-ua="Мови" data-en="Languages">Мови</div>
-      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-globe"/></svg><span data-ua="Languages" data-en="Languages">Languages</span></h2>
+      <div class="section-label" data-ua="Мови" data-ru="Языки" data-en="Languages">Мови</div>
+      <h2 class="section-title"><svg class="ico sec-ico" aria-hidden="true"><use href="#i-globe"/></svg><span data-ua="Languages" data-ru="Languages" data-en="Languages">Languages</span></h2>
     </div>
-    <div class="section-count" data-ua="02 — активних" data-en="02 — active">02 — активних</div>
+    <div class="section-count" data-ua="02 — активних" data-ru="02 — активных" data-en="02 — active">02 — активних</div>
   </div>
   <div class="metrics-row" style="grid-template-columns:1fr 1fr;">
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-flag-ua"/></svg></div><div class="mrow-val">Native</div><div class="mrow-lbl" data-ua="УКРАЇНСЬКА · РІДНА" data-en="UKRAINIAN · NATIVE">УКРАЇНСЬКА · РІДНА</div></div>
-    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-flag-en"/></svg></div><div class="mrow-val">B<span>2</span></div><div class="mrow-lbl" data-ua="ENGLISH · UPPER INTERMEDIATE" data-en="ENGLISH · UPPER INTERMEDIATE">ENGLISH · UPPER INTERMEDIATE</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-flag-ua"/></svg></div><div class="mrow-val">Native</div><div class="mrow-lbl" data-ua="УКРАЇНСЬКА · РІДНА" data-ru="УКРАИНСКИЙ · РОДНОЙ" data-en="UKRAINIAN · NATIVE">УКРАЇНСЬКА · РІДНА</div></div>
+    <div class="mrow"><div class="mrow-flag"><svg class="ico" aria-hidden="true"><use href="#i-flag-en"/></svg></div><div class="mrow-val">B<span>2</span></div><div class="mrow-lbl" data-ua="ENGLISH · UPPER INTERMEDIATE" data-ru="ENGLISH · UPPER INTERMEDIATE" data-en="ENGLISH · UPPER INTERMEDIATE">ENGLISH · UPPER INTERMEDIATE</div></div>
   </div>
 </section>
 
 <!-- CTA -->
 <section class="cta-section" id="contact">
-  <div class="cta-label" data-ua="Готовий до нових угод" data-en="Open to new deals">Готовий до нових угод</div>
-  <h2 class="cta-title" data-ua="Потрібен менеджер, який<br><em>закриває угоди від $10K</em>?" data-en="Need a manager who<br><em>closes deals from $10K</em>?">Потрібен менеджер, який<br><em>закриває угоди від $10K</em>?</h2>
-  <p class="cta-sub" data-ua="Напишіть у Telegram — обговоримо вертикаль, ринки, обсяги та модель співпраці." data-en="Message me on Telegram — we can discuss the vertical, markets, volumes and the cooperation model.">Напишіть у Telegram — обговоримо вертикаль, ринки, обсяги та модель співпраці.</p>
+  <div class="cta-label" data-ua="Готовий до нових угод" data-ru="Готов к новым сделкам" data-en="Open to new deals">Готовий до нових угод</div>
+  <h2 class="cta-title" data-ua="Потрібен менеджер, який<br><em>закриває угоди від $10K</em>?" data-ru="Нужен менеджер, который<br><em>закрывает сделки от $10K</em>?" data-en="Need a manager who<br><em>closes deals from $10K</em>?">Потрібен менеджер, який<br><em>закриває угоди від $10K</em>?</h2>
+  <p class="cta-sub" data-ua="Напишіть у Telegram — обговоримо вертикаль, ринки, обсяги та модель співпраці." data-ru="Напишите в Telegram — обсудим вертикаль, рынки, объёмы и модель сотрудничества." data-en="Message me on Telegram — we can discuss the vertical, markets, volumes and the cooperation model.">Напишіть у Telegram — обговоримо вертикаль, ринки, обсяги та модель співпраці.</p>
   <a href="https://t.me/FXSCXI" target="_blank" rel="noopener" class="cta-tg">
     <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22.5" cy="22" r="21" stroke="currentColor" stroke-width="2"/><path d="M15 22h14M29 22l-5-5M29 22l-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>@FXSCXI</span><span style="opacity:0.5">→</span>
@@ -862,33 +901,59 @@ footer{position:relative;z-index:1;padding:32px 48px;border-top:1px solid var(--
   });
 })();
 
-// ---------- language switch ----------
+// ---------- language dropdown ----------
 (function(){
+  var LANGS={ua:1,en:1,ru:1};
+  var HTMLLANG={ua:'uk',en:'en',ru:'ru'};
+  var LABEL={ua:'UA',en:'ENG',ru:'RU'};
   var TITLES={
-    ua:'Sales Manager / Business Development — B2B · iGaming — @FXSCXI',
-    en:'Sales Manager / Business Development — B2B · iGaming — @FXSCXI'
+    ua:'Sales Manager / Business Development \u2014 B2B \u00b7 iGaming \u2014 @FXSCXI',
+    en:'Sales Manager / Business Development \u2014 B2B \u00b7 iGaming \u2014 @FXSCXI',
+    ru:'Sales Manager / Business Development \u2014 B2B \u00b7 iGaming \u2014 @FXSCXI'
   };
-  var nodes=document.querySelectorAll('[data-ua][data-en]');
-  var btns=document.querySelectorAll('.lang-btn');
+  var nodes=document.querySelectorAll('[data-ua]');
+  var wrap=document.getElementById('langSelect');
+  var btn=document.getElementById('langBtn');
+  var cur=document.getElementById('langCur');
+  var opts=wrap.querySelectorAll('.ls-opt');
   function store(k,v){try{localStorage.setItem(k,v);}catch(e){}}
   function load(k){try{return localStorage.getItem(k);}catch(e){return null;}}
   function apply(lang){
+    if(!LANGS[lang])lang='ua';
+    var attr='data-'+lang;
     for(var i=0;i<nodes.length;i++){
-      var v=nodes[i].getAttribute(lang==='en'?'data-en':'data-ua');
+      var v=nodes[i].getAttribute(attr);
+      if(v===null)v=nodes[i].getAttribute('data-ua');
       if(v!==null)nodes[i].innerHTML=v;
     }
-    document.documentElement.setAttribute('lang',lang==='en'?'en':'uk');
+    document.documentElement.setAttribute('lang',HTMLLANG[lang]);
     document.title=TITLES[lang]||TITLES.ua;
-    for(var j=0;j<btns.length;j++){
-      btns[j].classList.toggle('active',btns[j].getAttribute('data-lang')===lang);
+    cur.textContent=LABEL[lang];
+    for(var j=0;j<opts.length;j++){
+      opts[j].setAttribute('aria-selected',opts[j].getAttribute('data-lang')===lang?'true':'false');
     }
     store('fx-lang',lang);
   }
-  var saved=load('fx-lang');
-  apply(saved==='en'?'en':'ua');
-  for(var k=0;k<btns.length;k++){
-    btns[k].addEventListener('click',function(){apply(this.getAttribute('data-lang'));});
+  function open(){wrap.classList.add('open');btn.setAttribute('aria-expanded','true');}
+  function close(){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+  apply(load('fx-lang')||'ua');
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    wrap.classList.contains('open')?close():open();
+  });
+  for(var k=0;k<opts.length;k++){
+    opts[k].addEventListener('click',function(e){
+      e.stopPropagation();
+      apply(this.getAttribute('data-lang'));
+      close();
+    });
   }
+  document.addEventListener('click',function(e){
+    if(wrap.classList.contains('open')&&!wrap.contains(e.target))close();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&wrap.classList.contains('open')){close();btn.focus();}
+  });
 })();
 
 // ---------- scroll progress ----------
